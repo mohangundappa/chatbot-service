@@ -1,194 +1,55 @@
+# AI Chatbot Service for Customer Support & Sales
 
-## Overview
+## 1. Project Goal 🎯
+**Objective:** Build an AI-powered chatbot service to automate customer support and sales interactions while maintaining conversation context across multiple channels.
 
-The **Chatbot API** is a FastAPI-based service designed to handle external chat ID to thread ID mapping for persistent conversations. It provides RESTful and WebSocket endpoints for managing chatbot interactions.
+**Key Focus Areas:**
+- Context-aware responses using conversation history
+- Scalable thread management for high-volume interactions
+- Unified interface for both synchronous (REST) and real-time (WebSocket) communication
+- Extensible architecture for business-specific workflows
 
-## Features
+## 2. Business Overview & Features 💼
+### Target Users
+- Customer support teams
+- Sales representatives
+- E-commerce platforms
+- Helpdesk systems
 
-- Exposes RESTful and WebSocket APIs for chatbot interactions.
-    
-- Supports CORS for cross-origin requests.
-    
-- Includes API documentation via Swagger and ReDoc.
-    
-- Provides a health check endpoint for monitoring service status.
-    
-- Uses LangGraph for stateful AI interactions.
-    
+### Core Functionalities
+✅ **Conversation Threading**  
+   - Automatic thread creation per external chat ID  
+   - Context preservation across sessions  
+✅ **Multi-Protocol Support**  
+   - REST API for traditional integrations  
+   - WebSocket for real-time streaming  
+✅ **State Management**  
+   - Persistent conversation history  
+   - Contextual response generation  
+✅ **Scalable Architecture**  
+   - Horizontal scaling support  
+   - Rate limiting ready  
 
-## Tech Stack
+## 3. Technology Stack 🛠️
+| Component              | Technology                          | Purpose                            |
+|------------------------|-------------------------------------|------------------------------------|
+| **Backend Framework**  | FastAPI (Python)                    | API & WebSocket endpoints          |
+| **AI Orchestration**   | LangChain + LangGraph               | Conversation state management      |
+| **LLM Integration**    | Langchain-OpenAI                    | GPT-4 model interactions           |
+| **Validation**         | Pydantic                            | Data modeling & validation         |
+| **Server**             | Uvicorn + Websockets                | ASGI server implementation         |
+| **Config Management**  | Python-Dotenv                       | Environment variable handling      |
+| **Packaging**          | Poetry/Pip                          | Dependency management              |
 
-- **FastAPI**: High-performance web framework for building APIs.
-    
-- **LangGraph**: For stateful chatbot interactions.
-    
-- **Langchain**: Integrates with LLMs.
-    
-- **CORS Middleware**: Enables cross-origin resource sharing.
-    
-- **Pydantic**: Data validation and settings management.
-    
-- **OpenAI API**: Uses OpenAI's language models.
-    
-
-## Installation
-
-### Prerequisites
-
-Ensure you have the following installed:
-
-- Python 3.8+
-    
-- pip (Python package manager)
-    
-
-### Steps
-
-1. Clone the repository:
-    
-    ```
-    git clone <repository-url>
-    cd <repository-directory>
-    ```
-    
-2. Create and activate a virtual environment:
-    
-    ```
-    python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-    ```
-    
-3. Install dependencies:
-    
-    ```
-    pip install -r requirements.txt
-    ```
-    
-
-## Running the Application
-
-Start the FastAPI application:
-
-```
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-## API Endpoints
-
-### Health Check
-
-- **Endpoint**: `GET /health`
-    
-- **Response**:
-    
-    ```
-    {
-      "status": "healthy",
-      "environment": "<app_env>",
-      "model": "<model_name>"
-    }
-    ```
-    
-
-### Chat API
-
-- **Endpoint**: `POST /api/v1/chat`
-    
-- **Request**:
-    
-    ```
-    {
-      "message": "Hello!",
-      "external_chat_id": "user123"
-    }
-    ```
-    
-- **Response**:
-    
-    ```
-    {
-      "response": "Hello! How can I help you?",
-      "thread_id": "abc-123",
-      "external_chat_id": "user123"
-    }
-    ```
-    
-
-### WebSocket Chat API
-
-- **Endpoint**: `ws://localhost:8000/ws/chat?external_chat_id=user123`
-    
-- **Usage**:
-    
-    - Send a message via WebSocket.
-        
-    - Receive chatbot responses in real-time.
-        
-
-### API Documentation
-
-- **Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)
-    
-- **ReDoc**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
-    
-
-## CORS Configuration
-
-The API allows cross-origin requests from all sources (`*`). This can be modified in the `app.add_middleware` section.
-
-## Folder Structure
-
-```
-.
-├── src/
-│   ├── chatbot/
-│   │   ├── api/
-│   │   │   ├── routes.py
-│   │   ├── config.py
-│   │   ├── services.py
-│   │   ├── graph.py
-│   │   ├── models.py
-├── main.py  # Entry point
-├── requirements.txt
-├── README.md
-```
-
-## Configuration
-
-The application reads settings from a `.env` file:
-
-```
-OPENAI_API_KEY=<your_api_key>
-APP_ENV=production
-MODEL_NAME=gpt-4o-mini
-```
-
-## Setup and Packaging
-
-```
-from setuptools import setup, find_packages
-
-setup(
-    name="chatbot",
-    version="0.1",
-    packages=find_packages(),
-    package_dir={"": "src"},
-)
-```
-
-## Contributing
-
-4. Fork the repository.
-    
-5. Create a feature branch.
-    
-6. Commit your changes.
-    
-7. Push to your branch.
-    
-8. Open a pull request.
-    
-
-## License
-
-This project is licensed under the MIT License.
+## 4. Implementation Architecture 🏗️
+```mermaid
+graph TD
+    A[Client] -->|REST/WebSocket| B(API Gateway)
+    B --> C{External Chat ID}
+    C -->|New Chat| D[Create Thread]
+    C -->|Existing Chat| E[Retrieve Thread]
+    D/E --> F[Conversation Graph]
+    F --> G[LLM Processing]
+    G --> H[State Storage]
+    H --> I[Response Generation]
+    I --> B
