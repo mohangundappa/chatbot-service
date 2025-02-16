@@ -1,3 +1,4 @@
+# chatbot-service/docker-compose.yml
 version: '3.8'
 
 services:
@@ -8,6 +9,22 @@ services:
     env_file:
       - .env
     environment:
-      - ENVIRONMENT=production
+      - RETAIL_APP_ENV=production
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    image: redis/redis-stack-server:latest
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
     volumes:
-      - ./src:/app/src
+      - redis_data:/data
+
+volumes:
+  redis_data:

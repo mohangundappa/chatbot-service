@@ -1,7 +1,15 @@
 fastapi
 uvicorn[standard]
+langchain
+langchain-redis
+langgraph-supervisor
 langchain-openai
+langchain-community
 langgraph
+pydantic
 pydantic-settings
 python-dotenv
 websockets
+redis
+httpx
+tiktoken
